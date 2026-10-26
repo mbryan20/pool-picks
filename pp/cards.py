@@ -120,6 +120,29 @@ def fair_margins(W, g):
     return np.rint((m - m.mean()) * (ATS_SD / m.std()) + center), S
 
 
+def anchored(W, g):
+    """Method rules 6-7: tiebreaker scores start from market-implied team totals; the stats model
+    (with research) may move each team by at most 3 points."""
+    S = W.sim(g)
+    mk = W.lines.get(g["id"])
+    if not mk or mk.get("total") is None:
+        return S["h"], S["a"]
+    ih, ia = (mk["total"] - mk["home_spread"]) / 2, (mk["total"] + mk["home_spread"]) / 2
+    th = ih + float(np.clip(S["mh"] - ih, -3, 3))
+    ta = ia + float(np.clip(S["ma"] - ia, -3, 3))
+    return (np.maximum(np.rint(S["h"] + th - S["h"].mean()), 0).astype(int),
+            np.maximum(np.rint(S["a"] + ta - S["a"].mean()), 0).astype(int))
+
+
+def research_why(S, g):
+    """Most material research item for the game, prefixed with the team it concerns."""
+    items = [a for a in S["why"] if abs(a.get("off_pts", 0)) + abs(a.get("def_pts", 0)) >= 1]
+    if not items:
+        return None, None
+    a = max(items, key=lambda a: abs(a.get("off_pts", 0)) + abs(a.get("def_pts", 0)))
+    return short(f"{a['team']}: {a['reason']}"), a["source"]
+
+
 def src_link(g, research):
     if research:
         return research[0]["source"]
@@ -191,14 +214,16 @@ def build_yahoo(W, slate):
             signals.append("no market line")
         rows.append({"g": g, "sg": sg, "pm": pm, "pk": pk, "S": S, "signals": signals, "mk": mk})
         p_true.append(pt); fav_home.append(fav); pub_home.append(pub)
-        sims_tb2.append((sg["home"], sg["away"], S["h"], S["a"]))
+        ah, aa = anchored(W, g)
+        h_is_home = norm(sg["home"]) == norm(g["homeTeam"])
+        sims_tb2.append((sg["home"], sg["away"], ah if h_is_home else aa, aa if h_is_home else ah))
     p_true, fav_home, pub_home = map(np.array, (p_true, fav_home, pub_home))
     picks, chosen, curve = P.yahoo_optimize(p_true, fav_home, eligible, pub_home, n_opp=y["group_size"] - 1)
 
     tb1 = {}
     for away, home in y["tb1"]:
-        g = W.find(away, home); S = W.sim(g)
-        best, alt = exact_score_pick(S["h"], S["a"])
+        g = W.find(away, home)
+        best, alt = exact_score_pick(*anchored(W, g))
         hn, an = (home, away) if norm(home) == norm(g["homeTeam"]) else (away, home)
         tb1[f"{away} @ {home}"] = {"pick": f"{an} {best[1]}, {hn} {best[0]}", "alt": f"{an} {alt[1]}, {hn} {alt[0]}",
                                    "key": (away, home)}
@@ -212,21 +237,27 @@ def build_yahoo(W, slate):
         pm = r["pm"] if home_pick else 1 - r["pm"]
         pk = None if r["pk"] is None else (r["pk"] if home_pick else 1 - r["pk"])
         is_dog = i in chosen
-        if S["why"]:
-            why = short(S["why"][0]["reason"])
-        elif is_dog:
+        rwhy, rsrc = research_why(S, g)
+        if is_dog:
             why = short(f"Upset: {', '.join(r['signals'])}; group on favorite")
+        elif rwhy:
+            why = rwhy
         elif S["wx"] and total_adjustment(S["wx"]) <= -2:
             why = short(f"Stats {pm*100:.0f}% win; wind {S['wx']['wind']:.0f} mph lowers scoring")
         else:
             gap = (pm - (pk or pm)) * 100
-            why = short(f"Stats {pm*100:.0f}% agrees with market" if abs(gap) < 8 else f"Stats {pm*100:.0f}% vs market {pk*100:.0f}%; take favorite")
+            if abs(gap) < 8:
+                why = f"Stats {pm*100:.0f}% agrees with market"
+            elif gap > 0:
+                why = f"Stats {pm*100:.0f}%, stronger than market {pk*100:.0f}%"
+            else:
+                why = f"Stats {pm*100:.0f}% vs market {pk*100:.0f}%; favorite kept"
         tbs = ""
         for k, v in tb1.items():
             if v["key"] == (sg["away"], sg["home"]):
                 tbs = "TB1: " + v["pick"]
         out.append({"game": f"{sg['away']} @ {sg['home']}", "kick": sg["kick"], "pick": pick + (" (dog)" if is_dog else ""),
-                    "model": pm, "market": pk, "wager": tbs, "why": why, "source": src_link(g, S["why"]),
+                    "model": pm, "market": pk, "wager": tbs, "why": why, "source": rsrc or src_link(g, []),
                     "key": f"{sg['away']}@{sg['home']}", "pick_team": pick})
     n_dogs = len(chosen)
     return {
