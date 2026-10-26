@@ -45,7 +45,7 @@ The page is https://mbryan20.github.io/pool-picks/ and is built from `docs/` on 
 
 ## STAGE = postmortem (Tue 8pm; Wednesday catch-up)
 Grade last week. Last week = the CFBD week whose games just finished, which is `current_week() - 1` on Tue/Wed.
-1. `git pull`.
+1. `git pull`. If `data/postmortem/2026-wNN.json` already exists for last week, it was already graded: skip steps 2–4 and go to step 5.
 2. **Read what Michael actually entered.** In the built-in browser, read-only, never change anything:
    - BTO: `/player/history` has last week's picks, lines incl. line points, and wagers. The dashboard and `/player/leaderboard` have the balance and rank.
    - CFP: `https://ncaa-pool-two.vercel.app/player/history` (or Individual Picks) has his picks and wagers. `/player/leaderboard` has the balance and rank.
