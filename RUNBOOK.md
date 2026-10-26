@@ -43,14 +43,35 @@ The page is https://mbryan20.github.io/pool-picks/ and is built from `docs/` on 
 - **final** (Fri 9pm): CFP and Yahoo FINAL. Friday Yahoo games and TB2 are already locked; leave them as posted Thursday.
 - **refresh** (Sat 8am): re-check injuries and QB news only. `--stage refresh` moves any changed pick to the top in red, and the push lists the changes. CFP locks at 11am, so flag any CFP change clearly.
 
-## STAGE = postmortem (Tue 8pm)
-1. `git pull`. Grade last week's posted cards (`data/published/2026-wNN-*.json`) against results from CFBD `/games` (cached call) or ESPN scoreboards.
-2. Append to `docs/history.md` a dated section for the week:
-   - The record per pool.
-   - Exactly 3 bullets that separate process from outcome: what was a good decision that lost, what was a bad decision that won, and one generalizable lesson (or "no change").
+## STAGE = postmortem (Tue 8pm; Wednesday catch-up)
+Grade last week. Last week = the CFBD week whose games just finished, which is `current_week() - 1` on Tue/Wed.
+1. `git pull`.
+2. **Read what Michael actually entered.** In the built-in browser, read-only, never change anything:
+   - BTO: `/player/history` has last week's picks, lines incl. line points, and wagers. The dashboard and `/player/leaderboard` have the balance and rank.
+   - CFP: `https://ncaa-pool-two.vercel.app/player/history` (or Individual Picks) has his picks and wagers. `/player/leaderboard` has the balance and rank.
+   - Yahoo: `https://football.fantasysports.yahoo.com/college/3659/<yahoo week>/picks` has his picks and tiebreakers. The group page has the standings.
+   - Write `data/entries/2026-wNN.json`:
+     ```
+     {"yahoo": {"<Away>@<Home>": {"pick": "<Team>"}},
+      "bto": {"<Away>@<Home>": {"pick": "<Team> <line incl. LP, e.g. +4.5>", "wager": "$400", "game": "<Away> @ <Home>"}},
+      "cfp": {...same as bto...},
+      "standings": {"bto": "...", "cfp": "...", "yahoo": "..."}}
+     ```
+     - Keys must match the card keys in `data/published/2026-wNN-<pool>.json`. Use the same team spellings; NFL uses ESPN abbreviations.
+     - Include entries on games the card didn't pick, using game keys in the same format.
+   - If a site is signed out, skip that pool's entries, say so in the history, and keep going.
+3. **Grade:** `py -m pp.grade --week NN`. This grades the card picks and the entries against final scores, lists every place the entry differs from the card, and writes `data/postmortem/2026-wNN.json` (which marks the week as graded).
+4. **Append** to `docs/history.md` a dated section for the week:
+   - Each pool's record: card vs entered, plus net for BTO/CFP.
+   - Current standings.
+   - For each difference between the card and the entry: which call was better and why, judged on the information available before kickoff, not just the result.
+   - Exactly 3 bullets that separate process from outcome: (1) a good decision that lost or a bad one that won; (2) card vs entries, where Michael's judgment added or cost value and whether that's repeatable; (3) one generalizable lesson, or "no change".
    - No team-specific permanent rules.
-3. Also check whether this week's BTO/CFP slates are posted. If they are, write them into the next slate file so Wednesday's draft is ready.
-4. `py -m pp.publish --stage postmortem --title "Pool Picks postmortem posted" --msg "Last week's grades are on the history page."`
+5. Also check whether this week's BTO, CFP and Yahoo slates are posted. If they are, write them into the next slate file so Wednesday's draft is ready.
+6. `py -m pp.publish --stage postmortem --title "Pool Picks postmortem posted" --msg "Week NN graded: <one-line summary>. Tap for history."`
+
+### Wednesday catch-up
+At the start of every Wed 9pm draft run, check whether `data/postmortem/2026-wNN.json` exists for last week. If it doesn't (the Tuesday run was missed), run the whole postmortem above first, including its publish and push, and then do the draft.
 
 ## If something fails
 Publish what you have. Never leave the page stale without saying so. Send a push that names the failure in one line.

@@ -366,17 +366,21 @@ def build_survivor():
 
 
 def mark_changes(card, stage, week):
+    """Flag picks that changed since the last posted card (Sat refresh), and save what was posted
+    (team, pick text with line, wager) for the Tuesday postmortem."""
     pub = ROOT / f"data/published/{YEAR}-w{week:02d}-{card['id']}.json"
     prev = json.loads(pub.read_text()) if pub.exists() else {}
     for r in card["rows"]:
         old = prev.get(r["key"])
+        old = old.get("team") if isinstance(old, dict) else old
         r["changed"] = bool(stage == "refresh" and old and old != r["pick_team"])
         if r["changed"]:
             r["was"] = old
     card["rows"].sort(key=lambda r: not r["changed"])
-    if stage in ("draft", "final"):
+    if card["rows"]:
         pub.parent.mkdir(parents=True, exist_ok=True)
-        pub.write_text(json.dumps({r["key"]: r["pick_team"] for r in card["rows"]}, indent=1))
+        pub.write_text(json.dumps({r["key"]: {"team": r["pick_team"], "pick": r["pick"], "wager": r["wager"],
+                                              "game": r["game"], "stage": stage} for r in card["rows"]}, indent=1))
 
 
 def render(cards, meta):

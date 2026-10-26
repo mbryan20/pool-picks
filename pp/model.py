@@ -17,12 +17,14 @@ LAMBDA = {"ppa": 3.0, "sr": 3.0, "pts": 3.0}  # prior worth ~3 games of data
 
 @lru_cache(None)
 def games(year):
-    return [g for g in cfbd("/games", year=year, classification="fbs") if g.get("seasonType") == "regular" or g.get("seasonType") is None]
+    # current season refreshes about daily so ratings and grading see new results
+    age = 20 if year >= 2026 else 24 * 365
+    return [g for g in cfbd("/games", max_age_h=age, year=year, classification="fbs") if g.get("seasonType") == "regular" or g.get("seasonType") is None]
 
 
 @lru_cache(None)
 def adv(year):
-    return cfbd("/stats/game/advanced", year=year, excludeGarbageTime="true")
+    return cfbd("/stats/game/advanced", max_age_h=20 if year >= 2026 else 24 * 365, year=year, excludeGarbageTime="true")
 
 
 @lru_cache(None)
