@@ -1,0 +1,104 @@
+{
+ "meta": {
+  "stage": "draft",
+  "stage_label": "DRAFT",
+  "week_label": "CFBD week 10 (Yahoo week 11)",
+  "generated": "Mon Oct 26, 09:30 AM CT",
+  "generated_iso": "2026-10-26T14:30:34.786478+00:00",
+  "calibration": [
+   "Backtest 2026 wks 1-8 (444 games): picks rated 60-70% hit 64%, 70-80% hit 71%, 80-90% hit 83%, 90%+ hit 86%.",
+   "Straight-up: model 70% vs market 75%; model trails early weeks, near market by wks 6-8."
+  ]
+ },
+ "cards": [
+  {
+   "id": "yahoo",
+   "title": "Yahoo pick'em (Kosmos, 14)",
+   "deadline": "",
+   "rows": [],
+   "status": "Slate not read from Yahoo yet (laptop run missed). Picks post when it is."
+  },
+  {
+   "id": "bto",
+   "title": "BTO Beat the Odds",
+   "deadline": "Due Fri 8:00pm CT (games lock at kickoff)",
+   "status": "Slate not read from the site yet (laptop run missed).",
+   "rows": [],
+   "notes": [
+    "Balance $2,820 (Balance after Week 7; Week 8 still being scored), #18 of 49; mode Three Bet: exactly 3 bets incl. Big Game, 50%+ of balance, 4 line points.",
+    "Playoff line (12th) $3,200; leader $7,800."
+   ]
+  },
+  {
+   "id": "cfp",
+   "title": "CFP 2026 points pool",
+   "deadline": "Locks Sat 11:00am CT",
+   "status": "Slate not read from the site yet (laptop run missed). Leans below use market lines, not the pool's spreads.",
+   "rows": [
+    {
+     "game": "Oregon @ Ohio State",
+     "pick": "Ohio State -6",
+     "model": 0.7129,
+     "market": 0.5,
+     "wager": "lean",
+     "why": "Stats margin 15; cover 71% vs market line",
+     "source": "https://www.espn.com/college-football/game/_/gameId/401858514",
+     "key": "Oregon@Ohio State",
+     "pick_team": "Ohio State",
+     "changed": false
+    },
+    {
+     "game": "Michigan State @ Michigan",
+     "pick": "Michigan State +16.5",
+     "model": 0.6198,
+     "market": 0.5,
+     "wager": "lean",
+     "why": "Stats margin 12; cover 62% vs market line",
+     "source": "https://www.espn.com/college-football/game/_/gameId/401858511",
+     "key": "Michigan State@Michigan",
+     "pick_team": "Michigan State",
+     "changed": false
+    },
+    {
+     "game": "BYU @ Utah",
+     "pick": "Utah -3",
+     "model": 0.6101,
+     "market": 0.5,
+     "wager": "lean",
+     "why": "Stats margin 7; cover 61% vs market line",
+     "source": "https://www.espn.com/college-football/game/_/gameId/401856849",
+     "key": "BYU@Utah",
+     "pick_team": "Utah",
+     "changed": false
+    },
+    {
+     "game": "Alabama @ LSU",
+     "pick": "LSU -3.5",
+     "model": 0.5854,
+     "market": 0.5,
+     "wager": "lean",
+     "why": "Stats margin 6; cover 59% vs market line",
+     "source": "https://www.espn.com/college-football/game/_/gameId/401856740",
+     "key": "Alabama@LSU",
+     "pick_team": "LSU",
+     "changed": false
+    },
+    {
+     "game": "Georgia @ Ole Miss",
+     "pick": "Ole Miss +4.5",
+     "model": 0.5642,
+     "market": 0.5,
+     "wager": "lean",
+     "why": "Stats margin 2; cover 56% vs market line",
+     "source": "https://www.espn.com/college-football/game/_/gameId/401856741",
+     "key": "Georgia@Ole Miss",
+     "pick_team": "Ole Miss",
+     "changed": false
+    }
+   ],
+   "notes": [
+    "Balance 11,904 (#29); leader 105,000. Must wager 50-100%."
+   ]
+  }
+ ]
+}
