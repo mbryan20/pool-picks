@@ -3,8 +3,8 @@
   "stage": "draft",
   "stage_label": "DRAFT",
   "week_label": "Week of Oct 29 - Nov 2, 2026 (Yahoo Week 10, NFL Week 8)",
-  "generated": "Mon Oct 26, 09:35 AM CT",
-  "generated_iso": "2026-10-26T14:35:04.858999+00:00",
+  "generated": "Mon Oct 26, 09:36 AM CT",
+  "generated_iso": "2026-10-26T14:36:35.529992+00:00",
   "calibration": [
    "Backtest 2026 wks 1-8 (444 games): picks rated 60-70% hit 64%, 70-80% hit 71%, 80-90% hit 83%, 90%+ hit 86%.",
    "Straight-up: model 70% vs market 75%; model trails early weeks, near market by wks 6-8."
@@ -61,7 +61,7 @@
      "pick": "Iowa",
      "model": 0.7425,
      "market": 0.6077653202909663,
-     "wager": "TB1: Wisconsin 13, Iowa 23",
+     "wager": "TB1 13-23",
      "why": "Stats 74%, stronger than market 61%",
      "source": "https://www.espn.com/college-football/game/_/gameId/401858502",
      "key": "Wisconsin@Iowa",
@@ -282,7 +282,7 @@
      "pick": "Ohio St.",
      "model": 0.6218,
      "market": 0.6979660133138218,
-     "wager": "TB1: Ohio St. 31, USC 24",
+     "wager": "TB1 31-24",
      "why": "Ohio State: Starter out; freshman Fahey or St. Clair unproven",
      "source": "https://www.clickorlando.com/sports/2026/10/21/ohio-state-qb-julian-sayin-out-indefinitely-after-injuring-throwing-arm/",
      "key": "Ohio St.@USC",

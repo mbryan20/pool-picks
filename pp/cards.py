@@ -226,7 +226,7 @@ def build_yahoo(W, slate):
         best, alt = exact_score_pick(*anchored(W, g))
         hn, an = (home, away) if norm(home) == norm(g["homeTeam"]) else (away, home)
         tb1[f"{away} @ {home}"] = {"pick": f"{an} {best[1]}, {hn} {best[0]}", "alt": f"{an} {alt[1]}, {hn} {alt[0]}",
-                                   "key": (away, home)}
+                                   "short": f"TB1 {best[1]}-{best[0]}", "key": (away, home)}
     most, fewest = P.extremes(sims_tb2)
 
     out = []
@@ -255,7 +255,7 @@ def build_yahoo(W, slate):
         tbs = ""
         for k, v in tb1.items():
             if v["key"] == (sg["away"], sg["home"]):
-                tbs = "TB1: " + v["pick"]
+                tbs = v["short"]
         out.append({"game": f"{sg['away']} @ {sg['home']}", "kick": sg["kick"], "pick": pick + (" (dog)" if is_dog else ""),
                     "model": pm, "market": pk, "wager": tbs, "why": why, "source": rsrc or src_link(g, []),
                     "key": f"{sg['away']}@{sg['home']}", "pick_team": pick})
